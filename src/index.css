@@ -1,6 +1,52 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Sparkland-inspired color palette */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0c4a6e;
+  --color-primary-950: #082f49;
+
+  --color-secondary-50: #faf5ff;
+  --color-secondary-100: #f3e8ff;
+  --color-secondary-200: #e9d5ff;
+  --color-secondary-300: #d8b4fe;
+  --color-secondary-400: #c084fc;
+  --color-secondary-500: #a855f7;
+  --color-secondary-600: #9333ea;
+  --color-secondary-700: #7c3aed;
+  --color-secondary-800: #6b21a8;
+  --color-secondary-900: #581c87;
+  --color-secondary-950: #3b0764;
+
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
+  --color-accent-800: #1e40af;
+  --color-accent-900: #1e3a8a;
+  --color-accent-950: #172554;
+
+  /* Glass morphism colors */
+  --color-glass-light: rgb(255 255 255 / 0.1);
+  --color-glass-medium: rgb(255 255 255 / 0.15);
+  --color-glass-dark: rgb(0 0 0 / 0.1);
+
+  /* Custom animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+}
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -8,46 +54,81 @@
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-  100% { box-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
+  0% { box-shadow: 0 0 20px rgb(59 130 246 / 0.5); }
+  100% { box-shadow: 0 0 30px rgb(168 85 247 / 0.8); }
 }
 
 /* Custom Glass Morphism Utilities */
-@layer utilities {
-  .glass {
-    @apply backdrop-blur-xl bg-white/10 border border-white/20;
-  }
-  
-  .glass-light {
-    @apply backdrop-blur-lg bg-white/5 border border-white/10;
-  }
-  
-  .glass-medium {
-    @apply backdrop-blur-xl bg-white/15 border border-white/25;
-  }
-  
-  .glass-dark {
-    @apply backdrop-blur-2xl bg-black/20 border border-white/10;
-  }
-  
-  .glass-hover {
-    @apply transition-all duration-300 hover:bg-white/20 hover:border-white/30;
-  }
+@utility glass {
+  backdrop-filter: blur(24px);
+  background-color: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  transition: all 0.3s ease;
 }
 
-/* Custom component styles */
-@layer components {
-  .nav-glass {
-    @apply glass glass-hover sticky top-0 z-50;
-  }
-  
-  .hero-gradient {
-    @apply bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900;
-  }
-  
-  .sparkland-gradient {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  }
+@utility glasshover {
+  background-color: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+@utility glasslight {
+  backdrop-filter: blur(16px);
+  background-color: rgb(255 255 255 / 0.05);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  transition: all 0.3s ease;
+}
+
+@utility glasslighthover {
+  background-color: rgb(255 255 255 / 0.15);
+  border-color: rgb(255 255 255 / 0.2);
+}
+
+@utility glassmedium {
+  backdrop-filter: blur(24px);
+  background-color: rgb(255 255 255 / 0.15);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  transition: all 0.3s ease;
+}
+
+@utility glassmediumhover {
+  background-color: rgb(255 255 255 / 0.25);
+  border-color: rgb(255 255 255 / 0.35);
+}
+
+@utility glassdark {
+  backdrop-filter: blur(32px);
+  background-color: rgb(0 0 0 / 0.2);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  transition: all 0.3s ease;
+}
+
+@utility glassdarkhover {
+  background-color: rgb(0 0 0 / 0.3);
+  border-color: rgb(255 255 255 / 0.2);
+}
+
+/* Custom component styles using regular CSS */
+.nav-glass {
+  backdrop-filter: blur(24px);
+  background-color: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-glass:hover {
+  background-color: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.hero-gradient {
+  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
+}
+
+.sparkland-gradient {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
 /* Base styles */
@@ -87,6 +168,13 @@ body {
 html {
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
 }
 
 h1 {
@@ -127,19 +215,6 @@ button:focus-visible {
 
   button {
     background-color: #f9f9f9;
-  }
-}
-/*
- Ensure full height for 3D canvas */
-@layer base {
-  html, body {
-    height: 100%;
-    width: 100%;
-  }
-  
-  #root {
-    height: 100vh;
-    width: 100vw;
   }
 }
 

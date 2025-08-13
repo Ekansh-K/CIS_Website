@@ -51,6 +51,7 @@ export default function CISLogo({
       ref={groupRef}
       scale={[scale, scale, scale]}
       position={[0, 0, 0]}
+      rotation={[Math.PI*0.5, Math.PI*0.5, 0]} // 180-degree rotation around X-axis (upside down)
       onPointerMove={handlePointerMove}
     >
       <primitive object={scene} />

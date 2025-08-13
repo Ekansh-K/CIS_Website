@@ -2,6 +2,9 @@ import { useEffect, useState, useRef } from 'react'
 import Logo3D from './components/Logo3D'
 import IntroScene from './components/IntroScene/IntroScene'
 import { useStore } from './lib/store'
+import CSvgUrl from './assets/Icons/C.svg'
+import ISvgUrl from './assets/Icons/I.svg'
+import SSvgUrl from './assets/Icons/S.svg'
 import './App.css'
 
 function App() {
@@ -134,8 +137,25 @@ function App() {
           <main className="relative z-10 pt-screen">
             <section className="h-screen flex items-center justify-center">
               <div className="text-center text-white">
-                <h1 className="text-6xl font-bold mb-4">
-                  Computational Intelligence Society
+                <h1 className="text-6xl font-bold mb-4 flex items-center justify-center gap-6">
+                  <img 
+                    src={CSvgUrl} 
+                    alt="Computational" 
+                    className="w-48 h-48" 
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
+                  <img 
+                    src={ISvgUrl} 
+                    alt="Intelligence" 
+                    className="w-48 h-48" 
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
+                  <img 
+                    src={SSvgUrl} 
+                    alt="Society" 
+                    className="w-48 h-48" 
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
                 </h1>
                 <p className="text-xl opacity-80">
                   Advancing the frontiers of computational intelligence

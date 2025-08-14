@@ -153,7 +153,7 @@ function App() {
       {/* Background Layer - Always rendered and visible behind intro */}
       <div 
         ref={mainContentRef}
-        className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-0"
+        className="fixed inset-0 bg-gradient-to-t from-blue-900 to-black z-0"
         style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
         tabIndex={-1}
         role="main"
@@ -187,19 +187,19 @@ function App() {
                 <img 
                   src={CSvgUrl} 
                   alt="Computational" 
-                  className="w-48 h-48" 
+                  className="w-70 h-70" 
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
                 <img 
                   src={ISvgUrl} 
                   alt="Intelligence" 
-                  className="w-48 h-48" 
+                  className="w-70 h-70" 
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
                 <img 
                   src={SSvgUrl} 
                   alt="Society" 
-                  className="w-48 h-48" 
+                  className="w-70 h-70" 
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               </h1>

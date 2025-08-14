@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import Logo3D from './components/Logo3D'
 import IntroScene from './components/IntroScene/IntroScene'
+import NeonDots from './components/NeonDots'
 import { useStore } from './lib/store'
 import CSvgUrl from './assets/Icons/C.svg'
 import ISvgUrl from './assets/Icons/I.svg'
@@ -9,21 +10,21 @@ import './App.css'
 
 function App() {
   const setLenis = useStore((state) => state.setLenis)
-  const { 
-    isIntroComplete, 
-    userSkipPreference, 
-    startIntro, 
+  const {
+    isIntroComplete,
+    userSkipPreference,
+    startIntro,
     completeIntro,
-    setPhase 
+    setPhase
   } = useStore()
-  
+
   const [showMainContent, setShowMainContent] = useState(true) // Always render main content
   const [introTransitionComplete, setIntroTransitionComplete] = useState(false)
   const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [mainContentReady, setMainContentReady] = useState(false)
   const mainContentRef = useRef<HTMLDivElement>(null)
   const lenisInitialized = useRef(false)
-  
+
   // Letter transition management (commented out for now)
   // const letterTransition = useLetterTransition()
 
@@ -37,7 +38,7 @@ function App() {
         // Preload 3D model
         const { useGLTF } = await import('@react-three/drei')
         await useGLTF.preload('/src/assets/models/Cis_Logo.glb')
-        
+
         // Preload SVG icons
         const svgPromises = [
           new Promise(resolve => {
@@ -56,7 +57,7 @@ function App() {
             img.src = SSvgUrl
           })
         ]
-        
+
         await Promise.allSettled(svgPromises)
         setAssetsLoaded(true)
       } catch (error) {
@@ -74,7 +75,7 @@ function App() {
     if (isIntroComplete && !lenisInitialized.current) {
       const initLenis = async () => {
         const Lenis = (await import('lenis')).default
-        
+
         const lenis = new Lenis({
           lerp: 0.1,
           duration: 1.2,
@@ -129,7 +130,7 @@ function App() {
     setPhase('complete')
     completeIntro()
     setIntroTransitionComplete(true)
-    
+
     // Focus management - move focus to main content for accessibility
     if (mainContentRef.current) {
       mainContentRef.current.focus()
@@ -151,7 +152,7 @@ function App() {
   return (
     <>
       {/* Background Layer - Always rendered and visible behind intro */}
-      <div 
+      <div
         ref={mainContentRef}
         className="fixed inset-0 bg-gradient-to-t from-blue-900 to-black z-0"
         style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
@@ -159,22 +160,25 @@ function App() {
         role="main"
         aria-label="IEEE CIS main content"
       >
+        {/* Neon Dots Animation */}
+        <NeonDots className="z-1" />
+
         {/* CIS Title */}
         <header className="absolute top-8 left-8 z-10">
           <h1 className="text-4xl font-bold text-white">CIS</h1>
         </header>
 
         {/* 3D Logo - Full screen background */}
-        <div 
-          className="absolute inset-0"
+        <div
+          className="absolute inset-0 z-2"
           style={{ width: '100%', height: '100%', top: 0, left: 0, right: 0, bottom: 0 }}
         >
           <Logo3D
             className="w-screen h-screen"
-            scale={5}
+            scale={3.5}
             rotationSpeed={0.002}
             mouseInfluence={0.75}
-            autoRotate={true}
+            autoRotate={false}
             onReady={handleMainContentReady}
           />
         </div>
@@ -184,22 +188,22 @@ function App() {
           <section className="h-screen flex items-center justify-center">
             <div className="text-center text-white">
               <h1 className="text-6xl font-bold mb-4 flex items-center justify-center gap-6">
-                <img 
-                  src={CSvgUrl} 
-                  alt="Computational" 
-                  className="w-70 h-70" 
+                <img
+                  src={CSvgUrl}
+                  alt="Computational"
+                  className="w-70 h-70"
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
-                <img 
-                  src={ISvgUrl} 
-                  alt="Intelligence" 
-                  className="w-70 h-70" 
+                <img
+                  src={ISvgUrl}
+                  alt="Intelligence"
+                  className="w-70 h-70"
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
-                <img 
-                  src={SSvgUrl} 
-                  alt="Society" 
-                  className="w-70 h-70" 
+                <img
+                  src={SSvgUrl}
+                  alt="Society"
+                  className="w-70 h-70"
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               </h1>

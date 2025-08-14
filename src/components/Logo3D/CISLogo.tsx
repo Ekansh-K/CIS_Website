@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Group } from 'three'
 
 interface CISLogoProps {
@@ -8,19 +8,30 @@ interface CISLogoProps {
   rotationSpeed?: number
   mouseInfluence?: number
   autoRotate?: boolean
+  onReady?: () => void
 }
 
 export default function CISLogo({
   scale = 1,
   rotationSpeed = 0.002,
   mouseInfluence = 0.75,
-  autoRotate = true
+  autoRotate = true,
+  onReady
 }: CISLogoProps) {
   const groupRef = useRef<Group>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [modelReady, setModelReady] = useState(false)
 
   // Load the GLB model
   const { scene } = useGLTF('/src/assets/models/Cis_Logo.glb')
+
+  // Notify when model is ready
+  useEffect(() => {
+    if (scene && !modelReady) {
+      setModelReady(true)
+      onReady?.()
+    }
+  }, [scene, modelReady, onReady])
 
   // Animation loop
   useFrame(() => {
@@ -51,7 +62,7 @@ export default function CISLogo({
       ref={groupRef}
       scale={[scale, scale, scale]}
       position={[0, 0, 0]}
-      rotation={[Math.PI*0.5, Math.PI*0.5, 0]} // 180-degree rotation around X-axis (upside down)
+      rotation={[0, 0, 0]} // 90-degree rotations around X, Y, and Z axes
       onPointerMove={handlePointerMove}
     >
       <primitive object={scene} />

@@ -4,6 +4,8 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  /* Match main page gradient background */
+  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
 }
 
 .logo {

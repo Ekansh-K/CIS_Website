@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDeviceDetection, useTransitionEnd, useScrollLock } from './hooks';
-import { LetterC, LetterI, LetterS } from './components';
+import SharedLetter from '../shared/SharedLetter';
 import type { IntroSceneProps } from './types';
 import styles from './styles/intro.module.scss';
+import CSvgUrl from '../../assets/Icons/C.svg';
+import ISvgUrl from '../../assets/Icons/I.svg';
+import SSvgUrl from '../../assets/Icons/S.svg';
 
 const IntroScene: React.FC<IntroSceneProps> = ({
   onComplete,
@@ -154,7 +157,7 @@ const IntroScene: React.FC<IntroSceneProps> = ({
           clearTimeout(exitTimerRef.current);
           exitTimerRef.current = null;
         }
-        
+
         // Ensure scroll is unlocked on cleanup
         unlockScroll();
       };
@@ -182,15 +185,21 @@ const IntroScene: React.FC<IntroSceneProps> = ({
       aria-label="IEEE CIS intro animation. Press Escape or click to skip."
     >
       <div className={styles.lettersContainer}>
-        <LetterC
+        <SharedLetter
+          letter="C"
+          svgUrl={CSvgUrl}
           className={`${styles.logoGroup} ${showLetters ? styles.show : ''}`}
           style={{ '--index': 0 } as React.CSSProperties}
         />
-        <LetterI
+        <SharedLetter
+          letter="I"
+          svgUrl={ISvgUrl}
           className={`${styles.logoGroup} ${showLetters ? styles.show : ''}`}
           style={{ '--index': 1 } as React.CSSProperties}
         />
-        <LetterS
+        <SharedLetter
+          letter="S"
+          svgUrl={SSvgUrl}
           className={`${styles.logoGroup} ${showLetters ? styles.show : ''}`}
           style={{ '--index': 2 } as React.CSSProperties}
         />

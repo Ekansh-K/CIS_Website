@@ -151,7 +151,8 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Match main page gradient background */
+  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -187,6 +188,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
+  /* Match main page gradient background */
+  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
 }
 
 html {
@@ -199,6 +202,8 @@ html {
 #root {
   height: 100vh;
   width: 100vw;
+  /* Ensure root also has matching background */
+  background: linear-gradient(to bottom right, #0f172a, #581c87, #0f172a);
 }
 
 h1 {

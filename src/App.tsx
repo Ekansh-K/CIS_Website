@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import Logo3D from './components/Logo3D'
 import IntroScene from './components/IntroScene/IntroScene'
 import { useStore } from './lib/store'
@@ -17,13 +17,57 @@ function App() {
     setPhase 
   } = useStore()
   
-  const [showMainContent, setShowMainContent] = useState(false)
+  const [showMainContent, setShowMainContent] = useState(true) // Always render main content
   const [introTransitionComplete, setIntroTransitionComplete] = useState(false)
+  const [assetsLoaded, setAssetsLoaded] = useState(false)
+  const [mainContentReady, setMainContentReady] = useState(false)
   const mainContentRef = useRef<HTMLDivElement>(null)
   const lenisInitialized = useRef(false)
+  
+  // Letter transition management (commented out for now)
+  // const letterTransition = useLetterTransition()
 
   // Determine if intro should be shown
   const shouldShowIntro = !isIntroComplete && !userSkipPreference
+
+  // Asset preloading during intro
+  useEffect(() => {
+    const preloadAssets = async () => {
+      try {
+        // Preload 3D model
+        const { useGLTF } = await import('@react-three/drei')
+        await useGLTF.preload('/src/assets/models/Cis_Logo.glb')
+        
+        // Preload SVG icons
+        const svgPromises = [
+          new Promise(resolve => {
+            const img = new Image()
+            img.onload = img.onerror = resolve
+            img.src = CSvgUrl
+          }),
+          new Promise(resolve => {
+            const img = new Image()
+            img.onload = img.onerror = resolve
+            img.src = ISvgUrl
+          }),
+          new Promise(resolve => {
+            const img = new Image()
+            img.onload = img.onerror = resolve
+            img.src = SSvgUrl
+          })
+        ]
+        
+        await Promise.allSettled(svgPromises)
+        setAssetsLoaded(true)
+      } catch (error) {
+        console.warn('Asset preloading failed:', error)
+        setAssetsLoaded(true) // Continue anyway
+      }
+    }
+
+    // Start preloading immediately
+    preloadAssets()
+  }, [])
 
   // Initialize Lenis smooth scroll - only after intro completes
   useEffect(() => {
@@ -57,25 +101,39 @@ function App() {
     }
   }, [setLenis, isIntroComplete])
 
-  // Handle intro completion with smooth transition
+  // Track when main content (3D scene) is ready
+  const handleMainContentReady = useCallback(() => {
+    setMainContentReady(true)
+  }, [])
+
+  // Handle letter transition from intro to main page (commented out)
+  // const handleLetterTransition = useCallback(() => {
+  //   // Start the letter transition animation
+  //   letterTransition.startTransition()
+  //   
+  //   // Complete the intro after letter transition
+  //   setTimeout(() => {
+  //     setPhase('complete')
+  //     completeIntro()
+  //     setIntroTransitionComplete(true)
+  //     
+  //     // Focus management - move focus to main content for accessibility
+  //     if (mainContentRef.current) {
+  //       mainContentRef.current.focus()
+  //     }
+  //   }, 1200) // Wait for letter transition to complete
+  // }, [letterTransition, setPhase, completeIntro])
+
+  // Handle intro completion - just focus management since main content is always visible
   const handleIntroComplete = () => {
     setPhase('complete')
     completeIntro()
+    setIntroTransitionComplete(true)
     
-    // Small delay to ensure state updates, then show main content
-    setTimeout(() => {
-      setShowMainContent(true)
-      
-      // Focus management - move focus to main content for accessibility
-      if (mainContentRef.current) {
-        mainContentRef.current.focus()
-      }
-      
-      // Mark transition as complete after a brief delay for smooth transition
-      setTimeout(() => {
-        setIntroTransitionComplete(true)
-      }, 300)
-    }, 100)
+    // Focus management - move focus to main content for accessibility
+    if (mainContentRef.current) {
+      mainContentRef.current.focus()
+    }
   }
 
   // Initialize intro on mount if it should be shown
@@ -84,8 +142,7 @@ function App() {
       setPhase('loading')
       startIntro()
     } else {
-      // Skip intro - show main content immediately
-      setShowMainContent(true)
+      // Skip intro - main content is already visible
       setIntroTransitionComplete(true)
       completeIntro()
     }
@@ -93,77 +150,74 @@ function App() {
 
   return (
     <>
-      {/* Intro Scene - Rendered first if needed */}
+      {/* Background Layer - Always rendered and visible behind intro */}
+      <div 
+        ref={mainContentRef}
+        className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 z-0"
+        style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
+        tabIndex={-1}
+        role="main"
+        aria-label="IEEE CIS main content"
+      >
+        {/* CIS Title */}
+        <header className="absolute top-8 left-8 z-10">
+          <h1 className="text-4xl font-bold text-white">CIS</h1>
+        </header>
+
+        {/* 3D Logo - Full screen background */}
+        <div 
+          className="absolute inset-0"
+          style={{ width: '100%', height: '100%', top: 0, left: 0, right: 0, bottom: 0 }}
+        >
+          <Logo3D
+            className="w-screen h-screen"
+            scale={5}
+            rotationSpeed={0.002}
+            mouseInfluence={0.75}
+            autoRotate={true}
+            onReady={handleMainContentReady}
+          />
+        </div>
+
+        {/* Content sections (for future development) */}
+        <main className="relative z-10 pt-screen">
+          <section className="h-screen flex items-center justify-center">
+            <div className="text-center text-white">
+              <h1 className="text-6xl font-bold mb-4 flex items-center justify-center gap-6">
+                <img 
+                  src={CSvgUrl} 
+                  alt="Computational" 
+                  className="w-48 h-48" 
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+                <img 
+                  src={ISvgUrl} 
+                  alt="Intelligence" 
+                  className="w-48 h-48" 
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+                <img 
+                  src={SSvgUrl} 
+                  alt="Society" 
+                  className="w-48 h-48" 
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+              </h1>
+              <p className="text-xl opacity-80">
+                Advancing the frontiers of computational intelligence
+              </p>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      {/* Intro Layer - On top during intro */}
       {shouldShowIntro && (
         <IntroScene
           onComplete={handleIntroComplete}
           autoStart={true}
           skipOnMobile={true}
         />
-      )}
-
-      {/* Main Content - Only rendered after intro completes or is skipped */}
-      {showMainContent && (
-        <div 
-          ref={mainContentRef}
-          className={`h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-visible transition-opacity duration-300 ${
-            introTransitionComplete ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
-          tabIndex={-1}
-          role="main"
-          aria-label="IEEE CIS main content"
-        >
-          {/* CIS Title */}
-          <header className="absolute top-8 left-8 z-10">
-            <h1 className="text-4xl font-bold text-white">CIS</h1>
-          </header>
-
-          {/* 3D Logo - Full screen background */}
-          <div 
-            className="absolute inset-0"
-            style={{ width: '100%', height: '100%', top: 0, left: 0, right: 0, bottom: 0 }}
-          >
-            <Logo3D
-              className="w-screen h-screen"
-              scale={5}
-              rotationSpeed={0.002}
-              mouseInfluence={0.75}
-              autoRotate={true}
-            />
-          </div>
-
-          {/* Content sections (for future development) */}
-          <main className="relative z-10 pt-screen">
-            <section className="h-screen flex items-center justify-center">
-              <div className="text-center text-white">
-                <h1 className="text-6xl font-bold mb-4 flex items-center justify-center gap-6">
-                  <img 
-                    src={CSvgUrl} 
-                    alt="Computational" 
-                    className="w-48 h-48" 
-                    style={{ filter: 'brightness(0) invert(1)' }}
-                  />
-                  <img 
-                    src={ISvgUrl} 
-                    alt="Intelligence" 
-                    className="w-48 h-48" 
-                    style={{ filter: 'brightness(0) invert(1)' }}
-                  />
-                  <img 
-                    src={SSvgUrl} 
-                    alt="Society" 
-                    className="w-48 h-48" 
-                    style={{ filter: 'brightness(0) invert(1)' }}
-                  />
-                </h1>
-                <p className="text-xl opacity-80">
-                  Advancing the frontiers of computational intelligence
-                </p>
-              </div>
-            </section>
-          </main>
-        </div>
       )}
     </>
   )

@@ -8,6 +8,7 @@ interface Logo3DProps {
   rotationSpeed?: number
   mouseInfluence?: number
   autoRotate?: boolean
+  onReady?: () => void
 }
 
 function Logo3DError({ error }: { error: Error }) {
@@ -29,7 +30,8 @@ export default function Logo3D({
   scale = 1,
   rotationSpeed = 0.002,
   mouseInfluence = 0.75,
-  autoRotate = true
+  autoRotate = true,
+  onReady
 }: Logo3DProps) {
   return (
     <div 
@@ -46,6 +48,7 @@ export default function Logo3D({
             rotationSpeed={rotationSpeed}
             mouseInfluence={mouseInfluence}
             autoRotate={autoRotate}
+            onReady={onReady}
           />
         </Scene3D>
       </ErrorBoundary>

@@ -37,10 +37,10 @@ const IntroScene: React.FC<IntroSceneProps> = ({
       onAllTransitionsComplete: () => {
         // All letters have completed their entrance transitions
         if (!exit && !exitTimerRef.current) {
-          // Start exit timer after hold time (1500ms)
+          // Start exit timer after hold time (1000ms)
           exitTimerRef.current = setTimeout(() => {
             setExit(true);
-          }, 1500); // Hold time before exit
+          }, 1000); // Hold time before exit - reduced by 500ms
         }
       },
       onFallbackTimeout: () => {

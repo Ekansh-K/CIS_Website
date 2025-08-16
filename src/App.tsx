@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import Logo3D from './components/Logo3D'
 import IntroScene from './components/IntroScene/IntroScene'
-import NeonDots from './components/NeonDots'
+import ParticleBackground from './components/ParticleBackground'
 import { useStore } from './lib/store'
 import CSvgUrl from './assets/Icons/C.svg'
 import ISvgUrl from './assets/Icons/I.svg'
@@ -154,19 +154,14 @@ function App() {
       {/* Background Layer - Always rendered and visible behind intro */}
       <div
         ref={mainContentRef}
-        className="fixed inset-0 bg-gradient-to-t from-blue-900 to-black z-0"
+        className="fixed inset-0 bg-gradient-to-t from-blue-900 via-blue-900 to-black z-0"
         style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
         tabIndex={-1}
         role="main"
         aria-label="IEEE CIS main content"
       >
-        {/* Neon Dots Animation */}
-        <NeonDots className="z-1" />
-
-        {/* CIS Title */}
-        <header className="absolute top-8 left-8 z-10">
-          <h1 className="text-4xl font-bold text-white">CIS</h1>
-        </header>
+        {/* Advanced Particle System Background */}
+        <ParticleBackground />
 
         {/* 3D Logo - Full screen background */}
         <div

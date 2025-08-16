@@ -63,11 +63,42 @@ export default function Scene3D({ children }: Scene3DProps) {
           color="#60a5fa"
         />
 
-        {/* Additional front light for better visibility */}
+        {/* Additional front light for better visibility - INTENSIFIED */}
         <pointLight
           position={[0, 0, 10]}
-          intensity={2.6}
+          intensity={3.5}
           color="#ffffff"
+        />
+        
+        {/* Extra intense front spotlight for maximum visibility */}
+        <spotLight 
+          position={[0, 0, 20]} 
+          intensity={2.5} 
+          color="#ffffff"
+          angle={Math.PI / 3}
+          penumbra={0.1}
+        />
+        
+        {/* Close-range front illumination array */}
+        <pointLight 
+          position={[0, 8, 15]} 
+          intensity={1.8} 
+          color="#f8fafc"
+        />
+        <pointLight 
+          position={[0, -8, 15]} 
+          intensity={1.8} 
+          color="#f8fafc"
+        />
+        <pointLight 
+          position={[8, 0, 15]} 
+          intensity={1.8} 
+          color="#f8fafc"
+        />
+        <pointLight 
+          position={[-8, 0, 15]} 
+          intensity={1.8} 
+          color="#f8fafc"
         />
 
         {/* Side lights for even illumination */}
@@ -81,6 +112,7 @@ export default function Scene3D({ children }: Scene3DProps) {
           intensity={1.5}
           color="#dbeafe"
         />
+
 
         <Suspense fallback={null}>
           {children}

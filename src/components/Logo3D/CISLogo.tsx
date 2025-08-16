@@ -41,7 +41,7 @@ export default function CISLogo({
       const y = -(event.clientY / window.innerHeight) * 2 + 1
       
       // Set mouse position for limited rotation
-      setMousePosition({ x: x * 0.5, y: y * 0.5 }) // Reduced sensitivity
+      setMousePosition({ x: x * 0.8, y: y * 0.8 }) // Reduced sensitivity
     }
 
     // Add global mouse listener
@@ -67,8 +67,8 @@ export default function CISLogo({
     const targetRotationZ = baseRotationZ + mousePosition.x * mouseInfluence * 0.3
 
     // Smooth interpolation (lerp)
-    groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * 0.05
-    groupRef.current.rotation.z += (targetRotationZ - groupRef.current.rotation.z) * 0.05
+    groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * 0.5
+    groupRef.current.rotation.z += (targetRotationZ - groupRef.current.rotation.z) * 0.5
     // Y-axis rotation is not affected by mouse (stays at auto-rotation or 0)
   })
 

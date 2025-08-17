@@ -10,7 +10,7 @@ export default function ParticleBackground({ className = '' }: ParticleBackgroun
   return (
     <div 
       className={`fixed inset-0 pointer-events-none ${className}`}
-      style={{ zIndex: 1 }}
+      style={{ zIndex: 1 }} /* Above background but below 3D logo and content */
     >
       <Canvas
         camera={{

@@ -3,6 +3,20 @@ import { persist } from 'zustand/middleware'
 import Lenis from 'lenis'
 
 type IntroPhase = 'loading' | 'animating' | 'complete'
+type ActiveSection = 'hero' | 'about' | 'team'
+type LogoPosition = 'center' | 'transitioning' | 'nav'
+
+interface LogoTransitionState {
+  position: LogoPosition
+  scale: number
+  progress: number
+}
+
+interface AboutState {
+  pointsRevealed: number
+  showContent: boolean
+  activePoint: number
+}
 
 interface Store {
   // Lenis smooth scroll instance
@@ -35,12 +49,28 @@ interface Store {
   currentPhase: IntroPhase
   userSkipPreference: boolean
   
+  // Scroll state management
+  scrollProgress: number
+  isScrolling: boolean
+  showNavigation: boolean
+  activeSection: ActiveSection
+  logoTransition: LogoTransitionState
+  aboutState: AboutState
+  
   // Intro scene actions
   startIntro: () => void
   completeIntro: () => void
   skipIntro: () => void
   setPhase: (phase: IntroPhase) => void
   setUserSkipPreference: (skip: boolean) => void
+  
+  // Scroll actions
+  updateScrollProgress: (progress: number) => void
+  setIsScrolling: (isScrolling: boolean) => void
+  setShowNavigation: (show: boolean) => void
+  setActiveSection: (section: ActiveSection) => void
+  setLogoTransition: (transition: Partial<LogoTransitionState>) => void
+  setAboutState: (state: Partial<AboutState>) => void
 }
 
 export const useStore = create<Store>()(
@@ -80,6 +110,22 @@ export const useStore = create<Store>()(
       currentPhase: 'loading' as IntroPhase,
       userSkipPreference: false,
 
+      // Scroll state management
+      scrollProgress: 0,
+      isScrolling: false,
+      showNavigation: false,
+      activeSection: 'hero' as ActiveSection,
+      logoTransition: {
+        position: 'center' as LogoPosition,
+        scale: 3.5,
+        progress: 0
+      },
+      aboutState: {
+        pointsRevealed: 0,
+        showContent: false,
+        activePoint: -1
+      },
+
       // Intro scene actions
       startIntro: () => {
         set({ 
@@ -112,6 +158,35 @@ export const useStore = create<Store>()(
 
       setUserSkipPreference: (skip: boolean) => {
         set({ userSkipPreference: skip })
+      },
+
+      // Scroll actions
+      updateScrollProgress: (progress: number) => {
+        set({ scrollProgress: progress })
+      },
+
+      setIsScrolling: (isScrolling: boolean) => {
+        set({ isScrolling })
+      },
+
+      setShowNavigation: (show: boolean) => {
+        set({ showNavigation: show })
+      },
+
+      setActiveSection: (section: ActiveSection) => {
+        set({ activeSection: section })
+      },
+
+      setLogoTransition: (transition: Partial<LogoTransitionState>) => {
+        set((state) => ({
+          logoTransition: { ...state.logoTransition, ...transition }
+        }))
+      },
+
+      setAboutState: (aboutStateUpdate: Partial<AboutState>) => {
+        set((state) => ({
+          aboutState: { ...state.aboutState, ...aboutStateUpdate }
+        }))
       },
     }),
     {

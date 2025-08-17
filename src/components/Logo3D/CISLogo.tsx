@@ -9,6 +9,12 @@ interface CISLogoProps {
   mouseInfluence?: number
   autoRotate?: boolean
   onReady?: () => void
+  // Scroll-based positioning and scaling props
+  position?: { x: number; y: number; z: number }
+  scrollScale?: number
+  scrollRotation?: { x: number; y: number; z: number }
+  disableMouseInteraction?: boolean
+  transitionProgress?: number
 }
 
 export default function CISLogo({
@@ -16,7 +22,12 @@ export default function CISLogo({
   rotationSpeed = 0.002,
   mouseInfluence = 0.75,
   autoRotate = true,
-  onReady
+  onReady,
+  position = { x: 0, y: 0, z: 0 },
+  scrollScale,
+  scrollRotation = { x: 0, y: 0, z: 0 },
+  disableMouseInteraction = false,
+  transitionProgress = 0
 }: CISLogoProps) {
   const groupRef = useRef<Group>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -53,23 +64,41 @@ export default function CISLogo({
     }
   }, [])
 
-  // Animation loop - limited mouse-based rotation only
+  // Animation loop - handles both mouse interaction and scroll-based transitions
   useFrame(() => {
     if (!groupRef.current) return
+
+    // Use scroll scale if provided, otherwise use regular scale
+    const currentScale = scrollScale !== undefined ? scrollScale : scale
+    groupRef.current.scale.set(currentScale, currentScale, currentScale)
+
+    // Update position based on scroll
+    groupRef.current.position.set(position.x, position.y, position.z)
 
     // Base rotation to maintain camera alignment
     const baseRotationX = Math.PI * 0.5 // Keep the base alignment
     const baseRotationZ = 0 // No base Z rotation
 
-    // Limited mouse influence: X-axis max 30 degrees, Z-axis unlimited
-    const maxXRotation = Math.PI / 6 // 30 degrees in radians
-    const targetRotationX = baseRotationX + Math.max(-maxXRotation, Math.min(maxXRotation, mousePosition.y * mouseInfluence * 0.3))
-    const targetRotationZ = baseRotationZ + mousePosition.x * mouseInfluence * 0.3
+    // Add 360-degree rotation during transition (full rotation = 2 * Math.PI)
+    const transitionRotationY = transitionProgress * Math.PI * 2 // 360 degrees
 
-    // Smooth interpolation (lerp)
-    groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * 0.5
-    groupRef.current.rotation.z += (targetRotationZ - groupRef.current.rotation.z) * 0.5
-    // Y-axis rotation is not affected by mouse (stays at auto-rotation or 0)
+    // Mouse interaction (disabled during transition)
+    if (!disableMouseInteraction && transitionProgress === 0) {
+      // Limited mouse influence: X-axis max 30 degrees, Z-axis unlimited
+      const maxXRotation = Math.PI / 6 // 30 degrees in radians
+      const targetRotationX = baseRotationX + Math.max(-maxXRotation, Math.min(maxXRotation, mousePosition.y * mouseInfluence * 0.3))
+      const targetRotationZ = baseRotationZ + mousePosition.x * mouseInfluence * 0.3
+
+      // Smooth interpolation (lerp)
+      groupRef.current.rotation.x += (targetRotationX - groupRef.current.rotation.x) * 0.5
+      groupRef.current.rotation.z += (targetRotationZ - groupRef.current.rotation.z) * 0.5
+      groupRef.current.rotation.y = scrollRotation.y
+    } else {
+      // During transition or when mouse interaction is disabled
+      groupRef.current.rotation.x = baseRotationX + scrollRotation.x
+      groupRef.current.rotation.y = scrollRotation.y + transitionRotationY
+      groupRef.current.rotation.z = baseRotationZ + scrollRotation.z
+    }
   })
 
   // Handle mouse movement - limited to X and Z axis rotation

@@ -151,8 +151,8 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  /* Match main page gradient background - 50/50 black and blue */
-  background: linear-gradient(to bottom right, #0f172a 25%, #581c87 50%, #0f172a 75%);
+  /* Match main page gradient background - 85% black and 15% blue */
+  background: linear-gradient(to bottom right, #0f172a 42.5%, #581c87 15%, #0f172a 42.5%);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -187,9 +187,10 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  overflow: hidden;
-  /* Match main page gradient background - 50/50 black and blue */
-  background: linear-gradient(to bottom right, #0f172a 25%, #581c87 50%, #0f172a 75%);
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Match main page gradient background - 85% black and 15% blue */
+  background: linear-gradient(to bottom right, #0f172a 48.5%, #581c87 5%, #0f172a 48.5%);
 }
 
 html {
@@ -200,10 +201,10 @@ html {
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  /* Ensure root also has matching background - 50/50 black and blue */
-  background: linear-gradient(to bottom right, #0f172a 25%, #581c87 50%, #0f172a 75%);
+  /* Ensure root also has matching background - 85% black and 15% blue */
+  background: linear-gradient(to bottom right, #0f172a 48.5%, #581c87 5%, #0f172a 48.5%);
 }
 
 h1 {
@@ -275,5 +276,29 @@ svg.icon {
   rect[stroke], 
   circle[stroke] {
     stroke: currentColor;
+  }
+}
+
+/* Layout system inspired by Lenis */
+.layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (min-width: 800px) {
+  .layout {
+    gap: 2rem;
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .layout {
+    max-width: 1400px;
+    gap: 2.5rem;
   }
 }

@@ -1,7 +1,14 @@
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useRef, useState, useEffect } from 'react'
-import { Group } from 'three'
+import { Group, Box3, Vector3 } from 'three'
+
+interface ModelBounds {
+  width: number
+  height: number
+  depth: number
+  center: { x: number; y: number; z: number }
+}
 
 interface CISLogoProps {
   scale?: number
@@ -9,6 +16,7 @@ interface CISLogoProps {
   mouseInfluence?: number
   autoRotate?: boolean
   onReady?: () => void
+  onBoundsCalculated?: (bounds: ModelBounds) => void
   // Scroll-based positioning and scaling props
   position?: { x: number; y: number; z: number }
   scrollScale?: number
@@ -23,6 +31,7 @@ export default function CISLogo({
   mouseInfluence = 0.75,
   autoRotate = true,
   onReady,
+  onBoundsCalculated,
   position = { x: 0, y: 0, z: 0 },
   scrollScale,
   scrollRotation = { x: 0, y: 0, z: 0 },
@@ -36,13 +45,38 @@ export default function CISLogo({
   // Load the GLB model
   const { scene } = useGLTF('/src/assets/models/Cis_Logo.glb')
 
-  // Notify when model is ready
+  // Calculate model bounds and notify when model is ready
   useEffect(() => {
     if (scene && !modelReady) {
+      // Calculate model bounds
+      const box = new Box3().setFromObject(scene)
+      const size = box.getSize(new Vector3())
+      const center = box.getCenter(new Vector3())
+      
+      // Account for current scale
+      const currentScale = scrollScale !== undefined ? scrollScale : scale
+      const scaledBounds: ModelBounds = {
+        width: size.x * currentScale,
+        height: size.y * currentScale,
+        depth: size.z * currentScale,
+        center: {
+          x: center.x * currentScale,
+          y: center.y * currentScale,
+          z: center.z * currentScale
+        }
+      }
+      
+      console.log('Model bounds calculated:', {
+        originalSize: { x: size.x, y: size.y, z: size.z },
+        scaledBounds,
+        scale: currentScale
+      })
+      
       setModelReady(true)
       onReady?.()
+      onBoundsCalculated?.(scaledBounds)
     }
-  }, [scene, modelReady, onReady])
+  }, [scene, modelReady, onReady, onBoundsCalculated, scale, scrollScale])
 
   // Global mouse listener as fallback
   useEffect(() => {

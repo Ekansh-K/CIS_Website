@@ -1,0 +1,253 @@
+/* AboutSection - Lenis-inspired sticky layout */
+.aboutSection {
+  margin-bottom: 10rem;
+  min-height: 200vh;
+  /* Ensure enough height for sticky effect */
+
+  @media (min-width: 800px) {
+    margin-bottom: 40rem;
+    /* Large bottom margin for natural height */
+    min-height: 300vh;
+    /* Even more height on desktop */
+  }
+}
+
+/* Left sticky content - inspired by Lenis sticky positioning */
+.sticky {
+  grid-column: 1 / -1;
+
+  @media (min-width: 800px) {
+    position: sticky;
+    top: 33vh;
+    /* Stick at 33% viewport height - key Lenis technique */
+    align-self: flex-start;
+    /* Align to start of container */
+    grid-column: 1 / span 5;
+    /* Columns 1-5 (60% wider - was 3 columns, now 5) */
+    padding: 1.5rem 2rem;
+    border-left: 4px solid #64ffda;
+    /* CIS accent color */
+
+    /* Premium Glass Effect */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(32px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+    }
+  }
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(45deg, #64ffda, #00bcd4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  @media (max-width: 799px) {
+    font-size: 2rem;
+  }
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Main content that appears after all points are revealed */
+.mainContent {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.contentTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #64ffda;
+  margin-bottom: 1rem;
+}
+
+.contentDescription {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.highlights {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.highlight {
+  padding: 0.5rem 1rem;
+  background: rgba(100, 255, 218, 0.1);
+  border: 1px solid rgba(100, 255, 218, 0.3);
+  border-radius: 20px;
+  color: #64ffda;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Right progressive content - key Lenis technique with large spacing */
+.features {
+  grid-column: 1 / -1;
+
+  @media (min-width: 800px) {
+    grid-column: 7 / -1;
+    /* Right side: columns 7-12 (adjusted for wider left content) */
+    margin-top: 16rem;
+    /* Push down from section start */
+  }
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+
+  /* Premium Glass Effect */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1);
+
+  opacity: 0.3;
+  transform: translateY(40px);
+  transition: all 0.6s ease;
+
+  /* KEY: Large spacing between features - creates sticky effect */
+  &:not(:first-child) {
+    margin-top: 7.5rem;
+    /* Large spacing on mobile */
+
+    @media (min-width: 800px) {
+      margin-top: 25rem;
+      /* Even larger on desktop - KEY LENIS TECHNIQUE */
+    }
+  }
+
+  /* Revealed state */
+  &.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Active state */
+  &.active {
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.15), rgba(100, 255, 218, 0.05));
+    border-color: rgba(100, 255, 218, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
+  }
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(100, 255, 218, 0.1);
+  border: 2px solid rgba(100, 255, 218, 0.3);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  .feature.active & {
+    background: rgba(100, 255, 218, 0.2);
+    border-color: rgba(100, 255, 218, 0.5);
+    transform: scale(1.1);
+  }
+}
+
+.featureContent {
+  flex: 1;
+}
+
+.featureTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
+
+  .feature.active & {
+    color: #64ffda;
+  }
+}
+
+.featureDescription {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  transition: color 0.3s ease;
+
+  .feature.active & {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Mobile simplification */
+@media (max-width: 799px) {
+  .aboutSection {
+    .sticky {
+      margin-bottom: 3rem;
+    }
+
+    .features .feature {
+      &:not(:first-child) {
+        margin-top: 2rem;
+        /* Much smaller spacing on mobile */
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .sticky {
+    @media (min-width: 800px) {
+      grid-column: 1 / span 4;
+      /* Adjust for smaller screens */
+    }
+  }
+
+  .features {
+    @media (min-width: 800px) {
+      grid-column: 6 / -1;
+      /* Adjust for smaller screens */
+    }
+  }
+}

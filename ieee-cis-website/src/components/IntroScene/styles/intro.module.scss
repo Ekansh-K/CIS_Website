@@ -1,0 +1,111 @@
+/* Intro Scene Styles - CSS-Heavy Approach with Lenis-Style Timing */
+
+/* Lenis-style timing variables */
+:root {
+  --entry-delay: 1000ms;
+  --letter-stagger: 125ms;
+  --hold-time: 1500ms;
+  --exit-duration: 800ms; /* Reduced from 1500ms for faster transition */
+  --expo-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-duration: 800ms;
+}
+
+/* Main wrapper for intro scene */
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #1e3a8a; /* Flat blue-900 color from main page gradient */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; /* Above main content (z-0) but not too high */
+  
+  &.exit {
+    transition: transform var(--exit-duration) var(--expo-easing);
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+/* Logo group container for letters */
+.logoGroup {
+  transform: translate3d(0, 100%, 0);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: 
+    transform var(--transition-duration) var(--expo-easing),
+    opacity var(--transition-duration) var(--expo-easing);
+  transition-delay: calc(var(--entry-delay) + (var(--index) * var(--letter-stagger)));
+  
+  &.show {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+/* Individual letter styles */
+.letter {
+  display: inline-block;
+  font-size: 8rem;
+  font-weight: 900;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  
+  /* SVG specific styles */
+  svg {
+    width: 8rem;
+    height: 8rem;
+    fill: white;
+    stroke: none;
+  }
+}
+
+/* Letter container for horizontal layout */
+.lettersContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .letter {
+    font-size: 6rem;
+    
+    svg {
+      width: 6rem;
+      height: 6rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .letter {
+    font-size: 4rem;
+    
+    svg {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+}
+
+/* Accessibility - Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .logoGroup {
+    transition: none;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  
+  .wrapper.exit {
+    transition: none;
+    transform: translate3d(0, -100%, 0);
+  }
+}

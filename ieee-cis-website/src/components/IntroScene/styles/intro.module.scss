@@ -5,7 +5,8 @@
   --entry-delay: 1000ms;
   --letter-stagger: 125ms;
   --hold-time: 1500ms;
-  --exit-duration: 800ms; /* Reduced from 1500ms for faster transition */
+  --column-duration: 600ms; /* Duration for each column to slide up */
+  --column-stagger: 300ms; /* When column reaches half, next one starts (600ms / 2) */
   --expo-easing: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-duration: 800ms;
 }
@@ -17,14 +18,58 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #1e3a8a; /* Flat blue-900 color from main page gradient */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10; /* Above main content (z-0) but not too high */
+  overflow: hidden;
+  
+  &:not(.exit) {
+    background: url('/intro_bg.png') center center / cover no-repeat;
+  }
   
   &.exit {
-    transition: transform var(--exit-duration) var(--expo-easing);
+    /* No background - let columns and letters animate independently */
+    background: none;
+    pointer-events: none;
+  }
+}
+
+/* Column overlays container */
+.columnOverlays {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 1;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Individual column */
+.column {
+  flex: 1;
+  height: 100%;
+  background-image: url('/intro_bg.png');
+  background-size: 500% 100%;
+  background-position: calc(var(--column-index) * 25%) center;
+  background-repeat: no-repeat;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  animation: slideUpColumn var(--column-duration) var(--expo-easing) forwards;
+  animation-delay: calc(var(--column-index) * var(--column-stagger));
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes slideUpColumn {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
     transform: translate3d(0, -100%, 0);
   }
 }
@@ -71,6 +116,26 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  position: relative;
+  z-index: 2; /* Above column overlays so letters are visible */
+}
+
+/* Make each letter move up progressively when exit starts */
+.wrapper.exit .logoGroup {
+  animation: slideLetterUp var(--column-duration) var(--expo-easing) forwards;
+  /* Stagger based on letter index: C=0, I=1, S=2 */
+  animation-delay: calc(var(--index) * var(--column-stagger) + var(--column-stagger));
+}
+
+@keyframes slideLetterUp {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -100vh, 0);
+    opacity: 1;
+  }
 }
 
 /* Responsive sizing */
@@ -104,8 +169,8 @@
     opacity: 1;
   }
   
-  .wrapper.exit {
-    transition: none;
+  .column {
+    animation: none;
     transform: translate3d(0, -100%, 0);
   }
 }

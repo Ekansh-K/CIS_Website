@@ -184,6 +184,19 @@ const IntroScene: React.FC<IntroSceneProps> = ({
       role="presentation"
       aria-label="IEEE CIS intro animation. Press Escape or click to skip."
     >
+      {/* Five column overlays for staggered exit animation */}
+      {exit && (
+        <div className={styles.columnOverlays}>
+          {[0, 1, 2, 3, 4].map((index) => (
+            <div
+              key={index}
+              className={styles.column}
+              style={{ '--column-index': index } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      )}
+      
       <div className={styles.lettersContainer}>
         <SharedLetter
           letter="C"
